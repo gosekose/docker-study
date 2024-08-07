@@ -1,73 +1,50 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## 1장
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+- 도커
+  -  레지스트리: 우리가 만든 이미지를 저장하는 곳
+  -  이미지: 다양한 종속성과 패키지, 애플리케이션이 묶여있는 파일
+  -  컨테이너: 이미지 내 파일들을 기반으로, 지정된 명령어를 실행한느 프로세스
+  -  도커
+    -  사용자가 요청한 명령어를 HTTP로 요청받아, 이미지를 만들고(build), 실행(run)해서 프로세스를 만들며, 레지스트리에 이미지를 저장(push)하고 공유할 수 있도록 만들어주는 도구이다
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+```
+  nginx
+  docker run --rm -p 8080:80 nginx
+  // nginx 컨테이너 내부 80 포트 실행, 8080포트 접근하면 80포트로 포워드, host 8080 사용, 이름 nginx
+  docker ps
+  docker run -f [CONTAINER ID]
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
 ```
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Test
+// 도커 볼륨 생성
+  docker volume create pg  
 
-```bash
-# unit tests
-$ npm run test
+  // memory, cpu 제한, 영구저장볼륨, -e: 환경변수 -> postgres password 설정
+  docker run --name pg --rm \
+  --memory="512m" --cpus="0.5" \
+  -v pg:/var/lib/postgresql/data \
+  -e POSTGRES_PASSWORD=rex postgres
 
-# e2e tests
-$ npm run test:e2e
+  docker exec -it pg bash // bash shell을 실행
 
-# test coverage
-$ npm run test:cov
+  psql -U postgres // bash에서 postgres 접근
+
+  docker rm -f 컨테이너아이디
+  docker volume rm pg
+  docker rmi -f pg
+
 ```
 
-## Support
+```
+docker run --rm --name httpd -p 8080:80 \
+-v .:/usr/local/apache2/htdocs/:ro \
+-d httpd:2.4
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+// 바인드 마운트
+// pc에 연결된 현재경로(.)를 /usr/~/htdocs/에 연결
+// :ro = Read-Only (컨테이너 내부에서는 수정 불가능 해야 함)
 
-## Stay in touch
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
